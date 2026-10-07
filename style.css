@@ -1,0 +1,268 @@
+:root {
+  --hud: rgb(255 172 24);
+  --hud-dim: rgb(255 172 24 / 0.55);
+  --hud-shadow: rgb(60 30 0 / 0.55);
+  --sky-tint: rgb(20 40 110 / 0.35);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #9fb6e6;
+  color: var(--hud);
+  font-family: "Teko", Impact, "Arial Narrow", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Windows 7 "Working in Background" cursor. Browsers can't play .ani,
+   so its 18 frames (33 ms each) are swapped by a discrete animation. */
+html {
+  cursor: url(assets/cursor/0.png) 0 8, progress;
+  animation: aero-busy 594ms infinite;
+}
+html * { cursor: inherit !important; }
+
+@keyframes aero-busy {
+  0% { cursor: url(assets/cursor/0.png) 0 8, progress; animation-timing-function: step-end; }
+  5.556% { cursor: url(assets/cursor/1.png) 0 8, progress; animation-timing-function: step-end; }
+  11.111% { cursor: url(assets/cursor/2.png) 0 8, progress; animation-timing-function: step-end; }
+  16.667% { cursor: url(assets/cursor/3.png) 0 8, progress; animation-timing-function: step-end; }
+  22.222% { cursor: url(assets/cursor/4.png) 0 8, progress; animation-timing-function: step-end; }
+  27.778% { cursor: url(assets/cursor/5.png) 0 8, progress; animation-timing-function: step-end; }
+  33.333% { cursor: url(assets/cursor/6.png) 0 8, progress; animation-timing-function: step-end; }
+  38.889% { cursor: url(assets/cursor/7.png) 0 8, progress; animation-timing-function: step-end; }
+  44.444% { cursor: url(assets/cursor/8.png) 0 8, progress; animation-timing-function: step-end; }
+  50% { cursor: url(assets/cursor/9.png) 0 8, progress; animation-timing-function: step-end; }
+  55.556% { cursor: url(assets/cursor/10.png) 0 8, progress; animation-timing-function: step-end; }
+  61.111% { cursor: url(assets/cursor/11.png) 0 8, progress; animation-timing-function: step-end; }
+  66.667% { cursor: url(assets/cursor/12.png) 0 8, progress; animation-timing-function: step-end; }
+  72.222% { cursor: url(assets/cursor/13.png) 0 8, progress; animation-timing-function: step-end; }
+  77.778% { cursor: url(assets/cursor/14.png) 0 8, progress; animation-timing-function: step-end; }
+  83.333% { cursor: url(assets/cursor/15.png) 0 8, progress; animation-timing-function: step-end; }
+  88.889% { cursor: url(assets/cursor/16.png) 0 8, progress; animation-timing-function: step-end; }
+  94.444% { cursor: url(assets/cursor/17.png) 0 8, progress; animation-timing-function: step-end; }
+  100% { cursor: url(assets/cursor/0.png) 0 8, progress; }
+}
+
+/* ---------- background ---------- */
+
+.sky {
+  position: fixed;
+  inset: -6%;
+  background: url(assets/bg.jpg) center / cover no-repeat;
+  filter: saturate(1.15);
+  animation: drift 40s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: scale(1.02) translate3d(-1.5%, 0, 0); }
+  to   { transform: scale(1.10) translate3d(1.5%, -1%, 0); }
+}
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 45%, var(--sky-tint) 100%),
+    repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.05) 0 1px, transparent 1px 3px);
+}
+
+/* ---------- centre ---------- */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 12vh;
+}
+
+.dancer {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  width: clamp(150px, 34vmin, 340px);
+  aspect-ratio: 1;
+  transition: transform 120ms ease-out;
+}
+.dancer img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 0 18px rgb(255 230 40 / 0.55)) drop-shadow(0 6px 10px rgb(0 0 40 / 0.35));
+}
+.dancer::after {
+  /* little shadow on the "cloud floor" */
+  content: "";
+  position: absolute;
+  left: 22%; right: 22%; bottom: -6%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(10 25 80 / 0.35), transparent);
+}
+.dancer:focus-visible { outline: 2px dashed var(--hud); outline-offset: 8px; }
+.dancer.hit { transform: scale(0.9) rotate(-6deg); }
+.dancer.hit img { filter: drop-shadow(0 0 22px rgb(255 40 20 / 0.8)) brightness(1.3); }
+
+/* ---------- knife viewmodel ---------- */
+
+.viewmodel {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: min(900px, 100vw, 108vh);
+  translate: -50% 0;
+  transform: translate3d(var(--sx, 0px), var(--sy, 0px), 0) rotate(var(--rot, 0deg));
+  transform-origin: 50% 120%;
+  pointer-events: none;
+  z-index: 2;
+}
+.viewmodel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: -2%;
+  transform-origin: 70% 100%;
+  filter: drop-shadow(0 -4px 14px rgb(0 0 30 / 0.25));
+}
+.viewmodel img.slash-a { animation: slash-a 300ms cubic-bezier(.2, .7, .3, 1); }
+.viewmodel img.slash-b { animation: slash-b 300ms cubic-bezier(.2, .7, .3, 1); }
+.viewmodel img.stab    { animation: stab 520ms cubic-bezier(.3, .6, .2, 1); }
+
+@keyframes slash-a {
+  0%   { transform: none; }
+  30%  { transform: translate(-16%, 6%) rotate(-24deg); }
+  100% { transform: none; }
+}
+@keyframes slash-b {
+  0%   { transform: none; }
+  30%  { transform: translate(-10%, 2%) rotate(16deg) scaleX(-1); }
+  100% { transform: none; }
+}
+@keyframes stab {
+  0%   { transform: none; }
+  25%  { transform: translate(4%, 10%) rotate(8deg); }
+  45%  { transform: translate(-12%, -14%) scale(1.15) rotate(-6deg); }
+  100% { transform: none; }
+}
+
+/* ---------- CS 1.6 style HUD ---------- */
+
+.hud {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 clamp(16px, 3vw, 40px) clamp(8px, 1.6vh, 18px);
+  z-index: 3;
+  pointer-events: none;
+  font-size: clamp(30px, 5.2vmin, 54px);
+  line-height: 0.8;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 6px var(--hud-shadow), 0 0 1px var(--hud-shadow);
+}
+.hud-group { display: flex; gap: clamp(16px, 4vw, 56px); }
+.hud-item { display: inline-flex; align-items: center; gap: 0.25em; }
+.hud-item b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.ico {
+  width: 0.72em;
+  height: 0.72em;
+  fill: var(--hud);
+  filter: drop-shadow(0 0 4px var(--hud-shadow));
+}
+.timer { position: absolute; left: 50%; bottom: clamp(8px, 1.6vh, 18px); translate: -50% 0; }
+.money b:first-child { color: var(--hud-dim); }
+.money.gain #money { color: rgb(120 255 90); }
+
+/* ---------- kill feed ---------- */
+
+.killfeed {
+  position: fixed;
+  top: clamp(12px, 3vh, 28px);
+  right: clamp(16px, 3vw, 32px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  z-index: 4;
+  pointer-events: none;
+  font-size: clamp(18px, 2.6vmin, 24px);
+  line-height: 1;
+}
+.killfeed li {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.2em 0.6em 0.05em;
+  background: rgb(0 0 0 / 0.45);
+  border-radius: 3px;
+  white-space: nowrap;
+  animation: feed-in 160ms ease-out, feed-out 400ms ease-in 4.6s forwards;
+}
+.killfeed .ct { color: rgb(150 200 255); }
+.killfeed .t  { color: rgb(255 70 60); }
+.killfeed svg { width: 2.6em; height: 0.9em; fill: rgb(255 225 150); }
+
+/* ---------- music toggle ---------- */
+
+.music-toggle {
+  position: fixed;
+  top: clamp(12px, 3vh, 28px);
+  left: clamp(16px, 3vw, 32px);
+  z-index: 5;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 0.4);
+}
+.music-toggle svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--hud);
+  animation: beat 0.48s ease-in-out infinite alternate;
+}
+.music-toggle.off svg { fill: var(--hud-dim); animation: none; }
+.music-toggle.off::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 26px;
+  height: 2px;
+  background: var(--hud);
+  rotate: -45deg;
+}
+.music-toggle:focus-visible { outline: 2px dashed var(--hud); outline-offset: 3px; }
+
+@keyframes beat { to { scale: 1.15; } }
+
+@keyframes feed-in { from { opacity: 0; transform: translateX(20px); } }
+@keyframes feed-out { to { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky { animation: none; }
+  .viewmodel img.slash-a, .viewmodel img.slash-b, .viewmodel img.stab { animation-duration: 1ms; }
+}
+
+@media (max-width: 600px) {
+  .stage { padding-bottom: 30vh; }
+  .viewmodel { width: 135vw; }
+  .timer { position: fixed; bottom: auto; top: calc(clamp(12px, 3vh, 28px) + 52px); left: clamp(16px, 3vw, 32px); translate: none; }
+  .killfeed { left: 72px; }
+  .killfeed li { white-space: normal; text-align: right; }
+}

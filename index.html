@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dans Pisti</title>
+  <meta name="description" content="Bulutların üstünde dans eden sarı adam, bıçak ve Music Sounds Better With You.">
+  <meta property="og:title" content="Dans Pisti">
+  <meta property="og:description" content="Bulutların üstünde dans eden sarı adam, bıçak ve Music Sounds Better With You.">
+  <meta name="theme-color" content="#9fb6e6">
+  <link rel="icon" type="image/png" href="assets/cursor/0.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <main class="stage">
+    <button class="dancer" id="dancer" type="button" aria-label="Dansçı">
+      <img src="assets/center.gif" alt="Dans eden sarı adam" width="200" height="200">
+    </button>
+  </main>
+
+  <ul class="killfeed" id="killfeed" aria-live="polite"></ul>
+
+  <audio id="music" src="assets/music.mp3" loop preload="auto"></audio>
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="Müzik" aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17V8h8V3z"/></svg>
+  </button>
+
+  <div class="viewmodel" id="viewmodel" aria-hidden="true">
+    <img id="knife" src="assets/hud.png" alt="" width="797" height="413">
+  </div>
+
+  <footer class="hud" aria-hidden="true">
+    <div class="hud-group">
+      <span class="hud-item"><svg class="ico" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg><b id="hp">100</b></span>
+      <span class="hud-item"><svg class="ico" viewBox="0 0 24 24"><path d="M12 1l9 4v6c0 6-4 10.5-9 12-5-1.5-9-6-9-12V5z"/></svg><b>100</b></span>
+    </div>
+    <span class="hud-item timer"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v5.6l4 2.4-1 1.7-5-3V7z"/></svg><b id="timer">1:45</b></span>
+    <span class="hud-item money"><b>$</b><b id="money">800</b></span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
